@@ -18,3 +18,8 @@
 - name: Show Publish IP
   debug:
     msg: "{{externalIP_ingress.stdout}}"
+
+- name: Cleanup manifest file
+  file:
+    path: /tmp/manifest/*
+    state: absent

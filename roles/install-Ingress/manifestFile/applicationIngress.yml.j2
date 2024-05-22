@@ -1,11 +1,12 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: haproxy-ingress
+  name: haproxy-ingress-{{env}}
   namespace: argocd
   labels:
-    name: haproxy-ingress
-    env: dbrr
+    name: haproxy-ingress-{{env}}
+    env: {{env}}
+    org: {{org}}
 spec:
   destination:
     namespace: haproxy-ingress
