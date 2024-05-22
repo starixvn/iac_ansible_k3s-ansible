@@ -1,0 +1,10 @@
+---
+- name: Add new Master node
+  hosts: master
+  environment: "{{ proxy_env | default({}) }}"
+  roles:
+    - prereq
+    - download
+    - k3s_server_join
+  tags:
+    - add-new-master-node

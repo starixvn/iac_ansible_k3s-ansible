@@ -1,0 +1,12 @@
+---
+- name: Run kubectl command to drain node
+  command:
+    cmd: k3s kubectl drain "{{ item }}" --delete-emptydir-data --ignore-daemonsets
+  loop: "{{nodeWantRemove}}"
+  register: exitcode_kubeCommandDrain
+
+- name: Run kubectl command to Delete Node from ETCD
+  command:
+    cmd: k3s kubectl delete node "{{ item }}"
+  loop: "{{nodeWantRemove}}"
+  register: exitcode_kubeCommandDel

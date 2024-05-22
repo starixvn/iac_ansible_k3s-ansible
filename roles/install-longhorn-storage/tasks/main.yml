@@ -1,0 +1,5 @@
+---
+- name: Run Kube command to install Longhorn Storage
+  shell:
+    k3s kubectl apply -f https://raw.githubusercontent.com/longhorn/longhorn/v1.6.1/deploy/longhorn.yaml
+  become: true

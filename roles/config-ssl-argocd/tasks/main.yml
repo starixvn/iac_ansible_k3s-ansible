@@ -1,0 +1,37 @@
+- name: Get key file DBRR encoded
+  shell: |
+    curl https://gitlab.dbrr.lc/ken/dbrr-ca-ssl-cert/-/raw/main/dbrr_lc.key | base64 | tr -d '\n'
+  register: dbrr_key
+
+- name: Get crt file DBRR encoded
+  shell: |
+    curl https://gitlab.dbrr.lc/ken/dbrr-ca-ssl-cert/-/raw/main/dbrr_lc.crt | base64 | tr -d '\n'
+  register: dbrr_crt
+
+- name: Gen Secret Component for HAProxy Ingress
+  template:
+    src: ingressSecret.yml.j2
+    dest: /tmp/manifest/ingressSecret.yml
+
+- name: Create Secret from file 
+  shell:
+    k3s kubectl apply -f /tmp/manifest/ingressSecret.yml
+
+- name: Copy ArgoCD Ingress file
+  copy:
+    src: manifestFile/{{item}}
+    dest: /tmp/manifest/{{item}}
+  with_items: 
+    - ingressArgoCD.yml
+    - configMapHAPIngress.yml
+  
+
+- name: Create ArgoCD Ingress and ConfigMap HAProxy Ingress
+  shell:  
+    k3s kubectl apply -f /tmp/manifest/{{ item }}
+  with_items: 
+    - ingressArgoCD.yml
+    - configMapHAPIngress.yml
+  
+
+

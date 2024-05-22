@@ -1,0 +1,20 @@
+- name: Copy manifest file of HAProxy Ingress
+  template:
+    src: manifestFile/applicationIngress.yml.j2
+    dest: /tmp/manifest/applicationIngress.yml
+  when: urlRepoArgo is defined
+
+- name: Run kube command to install app
+  shell: |
+    k3s kubectl apply -f /tmp/manifest/applicationIngress.yml
+  when: urlRepoArgo is defined
+
+- name: Publish IP for Ingress
+  shell: |
+    sleep 5s
+    k3s kubectl get svc -n haproxy-ingress | grep LoadBalancer | awk '{print $4}'
+  register: externalIP_ingress
+
+- name: Show Publish IP
+  debug:
+    msg: "{{externalIP_ingress.stdout}}"

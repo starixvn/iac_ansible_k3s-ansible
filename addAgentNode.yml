@@ -1,0 +1,10 @@
+---
+- name: Add new Agent node
+  hosts: node
+  environment: "{{ proxy_env | default({}) }}"
+  roles:
+    - prereq
+    - download
+    - k3s_agent
+  tags:
+    - add-new-agent-node

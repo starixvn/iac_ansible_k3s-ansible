@@ -1,0 +1,45 @@
+---
+- name: Install ArgoCD | Make directory manifest
+  file:
+    path: /tmp/manifest
+    state: directory
+
+- name: Install ArgoCD | Copy manifest file to Master Node
+  copy:
+    src: manifestFile/installArgoCD.yml
+    dest: /tmp/manifest/installArgoCD.yml
+
+- name: Install ArgoCD | Run kube command
+  shell: |
+    k3s kubectl create namespace argocd
+    k3s kubectl apply -n argocd -f /tmp/manifest/installArgoCD.yml
+
+
+- name: Install ArgoCD | Set ArgoCD custom admin password
+  shell: |
+    k3s kubectl -n argocd patch secret argocd-secret -p \
+      '{
+        "stringData": {
+          "admin.password": "{{ argocd_admin_password }}",
+          "admin.passwordMtime": "'$(date +%FT%T%Z)'"
+        }
+      }'
+
+- name: Config ArgoCD | Add credential repository for ArgoCD
+  template:
+    src: credTemplateArgo.yml.j2
+    dest: /tmp/manifest/credTemplateArgo.yml
+  when: urlRepoArgo is defined
+
+- name: Config ArgoCD | Add repository  for ArgoCD
+  template:
+    src: repoHelmArgo.yml.j2
+    dest: /tmp/manifest/repoHelmArgo.yml
+  when: urlRepoArgo is defined
+
+- name: Config ArgoCD | Create secret kind for Argo component
+  shell: |
+    k3s kubectl apply -f /tmp/manifest/{{ item }}
+  with_items: 
+    - credTemplateArgo.yml
+    - repoHelmArgo.yml

@@ -1,0 +1,24 @@
+---
+- name: Set fact first_master
+  set_fact:
+    first_master: "{{groups['master'] | first }}"
+
+
+- name: Stop Playbook if want remove First Master Node
+  command:
+    cmd: "hostname"
+  failed_when: first_master in masterNodeWantRemove
+
+- name: Run kubectl command to drain node
+  command:
+    cmd: k3s kubectl drain "{{ item }}" --delete-emptydir-data --ignore-daemonsets
+  loop: "{{masterNodeWantRemove}}"
+
+- name: Run kubectl command to Delete Node from ETCD
+  command:
+    cmd: k3s kubectl delete node "{{ item }}"
+  loop: "{{masterNodeWantRemove}}"
+
+
+
+

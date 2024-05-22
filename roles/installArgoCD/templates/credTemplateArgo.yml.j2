@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: repo-creds
+  namespace: argocd
+  labels:
+    argocd.argoproj.io/secret-type: repo-creds
+stringData:
+  insecure: "true"  
+  type: git
+  url: {{ urlRepoArgo }}
+  username: "rocketor.vn"
+  password: "h4YhFe7&ffVG!Qq^"
+

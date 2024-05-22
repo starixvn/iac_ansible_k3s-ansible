@@ -1,0 +1,9 @@
+---
+- name: Debug find first master node
+  gather_facts: true
+  hosts: localhost
+  run_once: true
+  tasks:
+    - name: First Master Node
+      debug:
+        msg: "First master node: {{ groups['master'] | first }}"

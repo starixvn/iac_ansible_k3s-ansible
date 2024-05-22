@@ -1,0 +1,12 @@
+---
+- name: Addons playbook
+  hosts: master[0]
+  run_once: true
+  roles:
+    - role: installArgoCD
+      # link gen decrypt https://bcrypt-generator.com/
+      # 1qaz@WSX
+      vars: {argocd_admin_password: "$2a$12$uyQL27v9XcNj3BukQ9I8NunqMb/ECZNlvAJ3j9X7excqN2/s6FA1."}
+      tags: installArgoCD
+    - role: install-Ingress
+      tags: install-Ingress

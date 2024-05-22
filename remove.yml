@@ -1,0 +1,18 @@
+---
+- name: Remove Agent Node
+  hosts: master[0]
+  roles:
+    - role: remove-node
+      vars: {nodeIsUp: true}
+  tags:
+    - removeAgentNode
+  run_once: true
+
+- name: Remove Master Node
+  hosts: master[0]
+  roles:
+    - role: remove-master-node
+      vars: {nodeIsUp: true}
+  tags:
+    - removeMasterNode
+  run_once: true
