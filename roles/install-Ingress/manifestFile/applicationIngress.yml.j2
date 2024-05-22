@@ -36,6 +36,9 @@ spec:
               stats show-modules
             forwarded-for: "true"
             dontlognull: "true"
+{% if org == "starix" and setTLS == "yes" %}
+            ssl-certificate: "haproxy-ingress/nexdev-crt"
+{% endif %}
     path: kubernetes-ingress-ori
     repoURL: "{{ urlRepoArgo }}"
     targetRevision: HEAD
