@@ -176,4 +176,4 @@ custom_registries_yaml: |
 #   NO_PROXY: "*.domain.local,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
 
 
-urlRepoArgo: "https://gitlab.nexdev.net/NEXOPS/helm-charts/helm-nexops-tools"
+urlRepoArgo: "https://gitlab.nexdev.net/NEXOPS/helm-charts/helm-nexops-tools.git"
