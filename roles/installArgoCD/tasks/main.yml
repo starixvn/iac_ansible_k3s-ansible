@@ -43,3 +43,12 @@
   with_items: 
     - credTemplateArgo.yml
     - repoHelmArgo.yml
+
+- name: Cleanup manifest file
+  file:
+    path: /tmp/manifest/{{item}}
+    state: absent
+  with_items:
+    - credTemplateArgo.yml
+    - repoHelmArgo.yml
+    - installArgoCD.yml
