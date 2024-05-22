@@ -13,10 +13,29 @@ spec:
   project: default
   source:
     helm:
+      releaseName: haproxy-ingress-{{env}}
       parameters:
       - name: "controller.service.type"
         value: LoadBalancer
-    path: kubernetes-ingress
+      valuesObject:
+        controller:
+          config:
+            timeout-connect: "5s"
+            scale-server-slots: "7"
+            maxconn: "20000"
+            stats-config-snippet: |
+{% if org == "starix" %}
+              stats auth nexcel:NexOps!QAZ
+{% elif org == "lumiplus" %}
+              stats auth lumi:lum!onRock
+{% endif %}
+              stats refresh 300s
+              stats show-legends
+              stats show-node
+              stats show-modules
+            forwarded-for: "true"
+            dontlognull: "true"
+    path: kubernetes-ingress-ori
     repoURL: "{{ urlRepoArgo }}"
     targetRevision: HEAD
   syncPolicy:
