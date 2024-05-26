@@ -3,10 +3,18 @@
   hostname:
     name: "{{ inventory_hostname }}"
 
-- name: Install nfs-common to all Nodes
+- name: Install nfs-common, pip3 to all Nodes
   apt:
-    name: nfs-common
+    name: "{{ item }}"
     update_cache: true
+  with_items:
+    - nfs-common
+    - pip3
+
+- name: Install Kubernetes Module
+  pip:
+    name: kubernetes>=12.0.0
+    state: present
 
 - name: Set same timezone on every Server
   community.general.timezone:
