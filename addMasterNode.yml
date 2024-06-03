@@ -4,7 +4,7 @@
   environment: "{{ proxy_env | default({}) }}"
   roles:
     - prereq
-    - download
+    # - download
     - k3s_server_join
   tags:
     - add-new-master-node

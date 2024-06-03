@@ -96,3 +96,11 @@
     src: resolv.conf.j2
     dest: /etc/rancher/k3s/resolv.conf
   when: privateDNS is defined
+
+- name: Copy K3S Binary File
+  file:
+    src: binaryK3Sfile/v1.29.2+k3s1/k3s
+    dest: /usr/local/bin/k3s
+    owner: root
+    group: root
+    mode: 0755
