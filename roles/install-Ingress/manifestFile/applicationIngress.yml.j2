@@ -35,8 +35,6 @@ spec:
               stats show-node
               stats show-modules
             forwarded-for: "true"
-            send-proxy-protocol: "proxy-v2"
-            proxy-protocol: "10.42.0.0/16"
             dontlognull: "true"
 {% if org == "starix" and setTLS == "yes" %}
             ssl-certificate: "haproxy-ingress/nexdev-crt"
