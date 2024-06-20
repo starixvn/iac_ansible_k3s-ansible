@@ -35,6 +35,7 @@ spec:
               stats show-node
               stats show-modules
             forwarded-for: "true"
+            forwardfor: "update"
             dontlognull: "true"
 {% if org == "starix" and setTLS == "yes" %}
             ssl-certificate: "haproxy-ingress/nexdev-crt"
