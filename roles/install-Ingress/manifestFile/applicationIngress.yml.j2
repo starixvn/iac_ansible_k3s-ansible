@@ -34,7 +34,8 @@ spec:
               stats show-legends
               stats show-node
               stats show-modules
-            forwarded-for: "false"
+            forwarded-for: "true"
+            src-ip-header: "True-Client-IP"
             dontlognull: "true"
 {% if org == "starix" and setTLS == "yes" %}
             ssl-certificate: "haproxy-ingress/nexdev-crt"
