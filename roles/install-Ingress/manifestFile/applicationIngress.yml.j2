@@ -34,7 +34,9 @@ spec:
               stats show-legends
               stats show-node
               stats show-modules
-            forwarded-for: "true"
+            backend-config-snippet: |
+              option forwarded
+            forwarded-for: "false"
             dontlognull: "true"
 {% if org == "starix" and setTLS == "yes" %}
             ssl-certificate: "haproxy-ingress/nexdev-crt"
