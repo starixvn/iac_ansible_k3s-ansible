@@ -34,10 +34,8 @@ spec:
               stats show-legends
               stats show-node
               stats show-modules
-            frontend-config-snippet: |
-              option forwardfor
-            forwarded-for: "false"
-            # src-ip-header: "True-Client-IP"
+            forwarded-for: "true"
+            send-proxy-protocol: "proxy-v2"
             dontlognull: "true"
 {% if org == "starix" and setTLS == "yes" %}
             ssl-certificate: "haproxy-ingress/nexdev-crt"
