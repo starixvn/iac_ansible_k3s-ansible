@@ -36,7 +36,7 @@ spec:
               stats show-modules
             forwarded-for: "true"
             dontlognull: "true"
-            syslog-server: "address:stdout, format: raw, facility:daemon"
+            # syslog-server: "address:stdout, format: raw, facility:daemon"
 {% if org == "starix" and setTLS == "yes" %}
             ssl-certificate: "haproxy-ingress/nexdev-crt"
 {% endif %}
