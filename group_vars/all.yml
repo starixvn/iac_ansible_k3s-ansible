@@ -68,6 +68,9 @@ extra_server_args: >-
   --cluster-cidr={{ cluster_cidr | default('10.52.0.0/16') }}
   {% endif %}
   --tls-san {{ apiserver_endpoint }}
+  {% if apiserver_loadbalancer_domain_name is defined %}
+  --tls-san {{ apiserver_loadbalancer_domain_name }}
+  {% endif %}
   --disable servicelb
   --disable traefik
   --cluster-domain {{ cluster_domain }}
