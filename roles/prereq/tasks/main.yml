@@ -40,7 +40,9 @@
     value: "1"
     state: present
     reload: true
-  tags: sysctl
+  tags: 
+  - sysctl
+  - ipv6
 
 - name: Enable IPv6 router advertisements
   ansible.posix.sysctl:
@@ -48,7 +50,9 @@
     value: "2"
     state: present
     reload: true
-  tags: sysctl
+  tags: 
+  - sysctl
+  - ipv6
 
 - name: Add br_netfilter to /etc/modules-load.d/
   copy:
