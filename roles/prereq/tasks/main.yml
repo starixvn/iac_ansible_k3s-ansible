@@ -51,6 +51,7 @@
     value: "2"
     state: present
     reload: true
+  when: disable_ipv6 != "yes"
   tags: 
   - sysctl
   - ipv6
