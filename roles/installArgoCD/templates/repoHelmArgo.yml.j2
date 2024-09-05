@@ -11,4 +11,15 @@ stringData:
   type: git
   url: {{ urlRepoArgo }}
 
-
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: values-helm-repo
+  namespace: argocd
+  labels:
+    argocd.argoproj.io/secret-type: repository
+stringData:
+  name: values-helm-repo
+  type: git
+  url: {{ urlRepoHelmValues }}
