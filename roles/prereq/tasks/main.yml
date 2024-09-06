@@ -10,6 +10,7 @@
   with_items:
     - nfs-common
     - python3-pip
+  tags: apt-install
 
 - name: Install Kubernetes Module
   pip:
