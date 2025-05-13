@@ -104,6 +104,106 @@
     dest: /etc/rancher/k3s/resolv.conf
   when: privateDNS is defined
 
+## Unlimit setting network
+# fs.inotify.max_user_instances=8192
+- name: Setting Max User Instance
+  ansible.posix.sysctl:
+    name: fs.inotify.max_user_instances
+    value: '8192'
+    state: present
+    sysctl_set: true
+    reload: true
+  tags: unlimit
+
+
+# fs.inotify.max_user_watches=524288
+- name: Setting Max User Watches
+  ansible.posix.sysctl:
+    name: fs.inotify.max_user_watches
+    value: '524288'
+    state: present
+    sysctl_set: true
+    reload: true
+  tags: unlimit
+
+# Load module nf_conntrack
+- name: Load nf_conntrack kernel module immediately
+  ansible.builtin.command: modprobe nf_conntrack
+
+
+# make sure module load after reboot
+- name: Ensure nf_conntrack module is loaded on boot
+  ansible.builtin.copy:
+    dest: /etc/modules-load.d/nf_conntrack.conf
+    content: "nf_conntrack\n"
+    owner: root
+    group: root
+    mode: '0644'
+
+
+# net.netfilter.nf_conntrack_max = 524288
+- name: Setting contrack_max
+  ansible.posix.sysctl:
+    name: net.netfilter.nf_conntrack_max
+    value: '524288'
+    state: present
+    sysctl_set: true
+    reload: true
+    sysctl_file: /etc/sysctl.conf
+  tags: unlimit
+
+# net.netfilter.nf_conntrack_tcp_timeout_close_wait = 60
+- name: Setting contrack close wait
+  ansible.posix.sysctl:
+    name: net.netfilter.nf_conntrack_tcp_timeout_close_wait
+    value: '60'
+    state: present
+    sysctl_set: true
+    reload: true
+    sysctl_file: /etc/sysctl.conf
+  tags: unlimit
+
+# net.netfilter.nf_conntrack_tcp_timeout_fin_wait = 60
+- name: Setting contrack fin wait
+  ansible.posix.sysctl:
+    name: net.netfilter.nf_conntrack_tcp_timeout_fin_wait
+    value: '60'
+    state: present
+    sysctl_set: true
+    reload: true
+    sysctl_file: /etc/sysctl.conf
+  tags: unlimit
+
+# net.netfilter.nf_conntrack_tcp_timeout_time_wait = 60
+- name: Setting contrack time wait
+  ansible.posix.sysctl:
+    name: net.netfilter.nf_conntrack_tcp_timeout_time_wait
+    value: '60'
+    state: present
+    sysctl_set: true
+    reload: true
+    sysctl_file: /etc/sysctl.conf
+  tags: unlimit
+
+# Setting unlimit security
+# fs.file-max=65536
+- name: Add or modify hard nofile limits for wildcard domain
+  community.general.pam_limits:
+    domain: '*'
+    limit_type: hard
+    limit_item: nofile
+    value: 65536
+  tags: pam_limit
+
+- name: Add or modify soft nofile limits for wildcard domain
+  community.general.pam_limits:
+    domain: '*'
+    limit_type: soft
+    limit_item: nofile
+    value: 65536
+  tags: pam_limit
+
+
 - name: Copy K3S Binary File
   copy:
     src: binaryK3Sfile/v1.29.2+k3s1/k3s
