@@ -204,6 +204,23 @@
   tags: pam_limit
 
 
+## caName: gamora - default (option gamora, nebula, nebulasit)
+## Trust Internal CA
+- name: Copy CRT file
+  copy:
+    src: "{{ item }}"
+    dest: "/usr/local/share/ca-certificates/"
+    owner: "root"
+    group: "root"
+    mode: 644
+  loop: "{{ query('fileglob', 'internalCA/rootCA{{caName}}.crt') }}"
+  tags: trustCA
+
+- name: Update system trust
+  raw: /usr/sbin/update-ca-certificates
+  tags: trustCA
+
+
 - name: Copy K3S Binary File
   copy:
     src: binaryK3Sfile/v1.29.2+k3s1/k3s

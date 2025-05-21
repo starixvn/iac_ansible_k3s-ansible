@@ -181,3 +181,4 @@ custom_registries_yaml: |
 gitPrefix: "https://gitlab.nexdev.net"
 urlRepoArgo: "https://gitlab.nexdev.net/NEXOPS/helm-charts/helm-nexops-tools.git"
 urlRepoHelmValues: "https://gitlab.nexdev.net/iac/ansible/argocd-application.git"
+caName: "gamora"
