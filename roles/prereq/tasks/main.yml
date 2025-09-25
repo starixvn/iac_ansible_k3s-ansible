@@ -223,7 +223,7 @@
 
 - name: Copy K3S Binary File
   copy:
-    src: binaryK3Sfile/v1.29.2+k3s1/k3s
+    src: binaryK3Sfile/{{ k3s_version | default('v1.30.14+k3s2') }}/k3s
     dest: /usr/local/bin/k3s
     owner: root
     group: root
