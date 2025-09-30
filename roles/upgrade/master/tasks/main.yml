@@ -9,11 +9,11 @@
     - name: Backup K3S Config
       copy:
         src: /etc/rancher/k3s/
-        dest: /var/backup/k3s/config-{{ ansible_date_time.date }}/
+        dest: /var/backup/k3s/config-{{ ansible_date_time.iso8601_basic_short }}/
         remote_src: yes
 
     - name: Backup etcd snapshot (for server nodes)
-      shell: k3s etcd-snapshot save --name backup-pre-upgrade-{{ ansible_date_time.date }}
+      shell: k3s etcd-snapshot save --name backup-pre-upgrade-{{ ansible_date_time.iso8601_basic_short }}
 
 - name: Stop K3S Service
   systemd:
