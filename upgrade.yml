@@ -80,16 +80,38 @@
         when: (version_diff | int) < 0
 
 
-# - name: Upgrade Master Node
-#   gather_facts: false
-#   hosts: master
-#   serial: 1
-#   roles:
-#     - { role: upgrade/master, tags: upgrade-master }
+- name: Upgrade Master Node
+  gather_facts: false
+  hosts: master
+  serial: 1
+  roles:
+    - { role: upgrade/common, tags: common-upgrade }
+    - { role: upgrade/master, tags: upgrade-master }
 
-# - name: Upgrade Agent Node
-#   gather_facts: false
-#   hosts: node
-#   serial: 50%
-#   roles:
-#     - { role: upgrade/agent, tags: upgrade-agent }
+- name: Upgrade Agent Node
+  gather_facts: false
+  hosts: node
+  serial: 50%
+  roles:
+    - { role: upgrade/common, tags: common-upgrade }
+    - { role: upgrade/agent, tags: upgrade-agent }
+
+- name: Post Upgrade Tasks
+  gather_facts: false
+  hosts: master
+  tasks:
+    - name: Get cluster version
+      shell: k3s kubectl version --short
+      register: cluster_version
+
+    - name: Display cluster version
+      debug:
+        msg: "{{ cluster_version.stdout_lines }}"
+
+    - name: Final health check
+      shell: k3s kubectl get --raw='/readyz?verbose'
+      register: health_check
+
+    - name: Display health check
+      debug:
+        msg: "Cluster health: {{ health_check.stdout }}"
