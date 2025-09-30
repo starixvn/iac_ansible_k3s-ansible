@@ -1,0 +1,21 @@
+---
+- name: Prepare for Upgrade
+  gather_facts: false
+  hosts: all
+  roles:
+    - { role: upgrade/prereq, tags: upgrade-prereq }
+  
+
+- name: Upgrade Master Node
+  gather_facts: false
+  hosts: master
+  serial: 1
+  roles:
+    - { role: upgrade/master, tags: upgrade-master }
+
+- name: Upgrade Agent Node
+  gather_facts: false
+  hosts: node
+  serial: 50%
+  roles:
+    - { role: upgrade/agent, tags: upgrade-agent }

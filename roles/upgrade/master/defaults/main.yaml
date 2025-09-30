@@ -1,0 +1,1 @@
+up_version: {{ k3s_version_wanted }}
