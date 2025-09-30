@@ -43,7 +43,7 @@
 
 
 - name: Verify node is Ready
-  shell: k3s kubectl get node {{ ansible_hostname }} -o jsonpath='{.status.conditions[?(@.type=="Ready")].status}'
+  shell: k3s kubectl get node {{ inventory_hostname }} -o jsonpath='{.status.conditions[?(@.type=="Ready")].status}'
   register: node_status
   until: node_status.stdout == "True"
   retries: 20
