@@ -2,20 +2,94 @@
 - name: Prepare for Upgrade
   gather_facts: false
   hosts: all
-  roles:
-    - { role: upgrade/prereq, tags: upgrade-prereq }
-  
+  vars:
+    k3s_version_wanted: "{{ k3s_version }}"
+    # List of supported k3s versions for upgrade
+    supported_k3s_versions:
+      - v1.30.14+k3s2
+      - v1.31.13+k3s1
+      - v1.32.9+k3s1
+      - v1.33.5+k3s1
+  tasks:
+      - name: Validate target version is in supported list
+        fail:
+          msg: |
+            ERROR: Target version '{{ k3s_version_wanted }}' is not in the supported versions list!
+            
+            Supported versions:
+            {{ supported_k3s_versions | join('\n') }}
 
-- name: Upgrade Master Node
-  gather_facts: false
-  hosts: master
-  serial: 1
-  roles:
-    - { role: upgrade/master, tags: upgrade-master }
+            Please update 'k3s_version_wanted' to one of the supported versions above.
+        when: k3s_version_wanted not in supported_k3s_versions
 
-- name: Upgrade Agent Node
-  gather_facts: false
-  hosts: node
-  serial: 50%
-  roles:
-    - { role: upgrade/agent, tags: upgrade-agent }
+      - name: Extract target minor version
+        set_fact:
+          target_minor: "{{ k3s_version_wanted | regex_search('v(\\d+)\\.(\\d+)', '\\2') | first }}"
+          target_major: "{{ k3s_version_wanted | regex_search('v(\\d+)\\.(\\d+)', '\\1') | first }}"
+
+
+      - name: Gather current k3s version
+        shell: k3s --version | grep -oP 'v\d+\.\d+\.\d+'
+        register: current_version_check
+        changed_when: false
+        delegate_to: "{{ groups['master'][0] }}"
+      
+      - name: Extract current minor version
+        set_fact:
+          current_minor: "{{ current_version_check.stdout | regex_search('v(\\d+)\\.(\\d+)', '\\2') | first }}"
+          current_major: "{{ current_version_check.stdout | regex_search('v(\\d+)\\.(\\d+)', '\\1') | first }}"
+          current_version_full: "{{ current_version_check.stdout }}"
+
+
+      - name: Calculate version difference
+        set_fact:
+          version_diff: "{{ (target_minor | int) - (current_minor | int) }}"
+
+      - name: Display version information
+        debug:
+          msg:
+            - "Current K3s version: {{ current_version_full }}"
+            - "Target K3s version: {{ k3s_version_wanted }}"
+            - "Version difference: {{ version_diff }} minor versions"
+
+
+      - name: Fail if skipping minor versions
+        fail:
+          msg: |
+            ERROR: Cannot skip minor versions!
+            Current version: {{ current_version_full }}
+            Target version: {{ k3s_version_wanted }}
+
+            According to Kubernetes version skew policy, you MUST upgrade sequentially.
+            You are attempting to skip {{ version_diff | int - 1 }} version(s).
+            
+            Required upgrade path:
+            {% for v in range(current_minor | int + 1, target_minor | int + 1) %}
+            - v1.{{ v }}.x
+            {% endfor %}
+
+            Please update the 'k3s_version_wanted' variable to the next minor version: v1.{{ current_minor | int + 1 }}.x
+        when: (version_diff | int) > 1
+
+      - name: Fail if downgrading
+        fail:
+          msg: |
+            ERROR: Downgrading is not supported!
+            Current version: {{ current_version_full }}
+            Target version: {{ k3s_version_wanted }}
+        when: (version_diff | int) < 0
+
+
+# - name: Upgrade Master Node
+#   gather_facts: false
+#   hosts: master
+#   serial: 1
+#   roles:
+#     - { role: upgrade/master, tags: upgrade-master }
+
+# - name: Upgrade Agent Node
+#   gather_facts: false
+#   hosts: node
+#   serial: 50%
+#   roles:
+#     - { role: upgrade/agent, tags: upgrade-agent }
