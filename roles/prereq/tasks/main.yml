@@ -12,10 +12,10 @@
     - python3-pip
   tags: apt-install
 
-- name: Install Kubernetes Module
-  pip:
-    name: kubernetes>=12.0.0
-    state: present
+# - name: Install Kubernetes Module
+#   pip:
+#     name: kubernetes>=12.0.0
+#     state: present
 
 - name: Set same timezone on every Server
   community.general.timezone:
