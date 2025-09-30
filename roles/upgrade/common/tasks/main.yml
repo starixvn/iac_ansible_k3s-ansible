@@ -7,6 +7,6 @@
 
 - name: Download k3s binary from MinIO - {{ k3s_version_wanted }}
   get_url:
-    url: "https://{{ minio_url | default('https://s3-api.starixsoft.com') }}/k3s-binary/{{ k3s_version_wanted }}/k3s"
+    url: "https://{{ minio_url | default('s3-api.starixsoft.com') }}/k3s-binary/{{ k3s_version_wanted }}/k3s"
     dest: /tmp/k3s-bin/k3s
     mode: '0755'
