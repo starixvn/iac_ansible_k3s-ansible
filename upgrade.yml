@@ -81,7 +81,7 @@
 
 
 - name: Upgrade Master Node
-  gather_facts: false
+  gather_facts: yes
   hosts: master
   serial: 1
   roles:
@@ -89,7 +89,7 @@
     - { role: upgrade/master, tags: upgrade-master }
 
 - name: Upgrade Agent Node
-  gather_facts: false
+  gather_facts: yes
   hosts: node
   serial: 50%
   roles:
