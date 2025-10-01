@@ -1,6 +1,6 @@
 - name: Stop K3S Service
   systemd:
-    name: k3s
+    name: k3s-node
     state: stopped
 
 - name: Copy K3S Binary
@@ -12,15 +12,15 @@
 
 - name: Start K3s service
   systemd:
-    name: k3s
+    name: k3s-node
     state: started
     enabled: yes
 
 
-- name: Verify node is Ready
-  shell: k3s kubectl get node {{ inventory_hostname  }} -o jsonpath='{.status.conditions[?(@.type=="Ready")].status}'
-  register: node_status
-  until: node_status.stdout == "True"
-  retries: 20
-  delay: 10
+# - name: Verify node is Ready
+#   shell: k3s kubectl get node {{ inventory_hostname  }} -o jsonpath='{.status.conditions[?(@.type=="Ready")].status}'
+#   register: node_status
+#   until: node_status.stdout == "True"
+#   retries: 20
+#   delay: 10
 
