@@ -221,10 +221,25 @@
   tags: trustCA
 
 
-- name: Copy K3S Binary File
+- name: Download k3s binary from MinIO - {{ k3s_version }}
+  get_url:
+    url: "https://{{ minio_url | default('s3-api.starixsoft.com') }}/k3s-binary/{{ k3s_version }}/k3s"
+    dest: /tmp/k3s-bin/k3s
+    mode: '0755'
+  delegate_to: "localhost"
+  become: false
+  run_once: true
+
+- name: Copy K3S Binary
   copy:
-    src: binaryK3S/{{ k3s_version | default('v1.30.14+k3s2') }}/k3s
+    src: /tmp/k3s-bin/k3s
     dest: /usr/local/bin/k3s
-    owner: root
-    group: root
-    mode: 0755
+    mode: '0755'
+
+# - name: Copy K3S Binary File
+#   copy:
+#     src: binaryK3S/{{ k3s_version | default('v1.30.14+k3s2') }}/k3s
+#     dest: /usr/local/bin/k3s
+#     owner: root
+#     group: root
+#     mode: 0755
