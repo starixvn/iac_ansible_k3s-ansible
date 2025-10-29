@@ -221,6 +221,15 @@
   tags: trustCA
 
 
+- name: Create dir store k3s binary files
+  file:
+    path: /tmp/k3s-bin
+    state: directory
+    mode: '0755'
+  delegate_to: "localhost"
+  become: false
+  run_once: true
+
 - name: Download k3s binary from MinIO - {{ k3s_version }}
   get_url:
     url: "https://{{ minio_url | default('s3-api.starixsoft.com') }}/k3s-binary/{{ k3s_version }}/k3s"
