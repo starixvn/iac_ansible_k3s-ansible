@@ -23,7 +23,7 @@ cilium_tag: "v1.15.2"        # cilium version tag
 cilium_hubble: true          # enable hubble observability relay and ui
 
 # if using calico or cilium, you may specify the cluster pod cidr pool
-cluster_cidr: "10.52.0.0/16"
+# cluster_cidr: "10.52.0.0/16"
 
 # enable cilium bgp control plane for lb services and pod cidrs. disables metallb.
 cilium_bgp: false
@@ -71,11 +71,11 @@ extra_server_args: >-
   {% if apiserver_loadbalancer_domain_name is defined %}
   --tls-san {{ apiserver_loadbalancer_domain_name }}
   {% endif %}
-  {% if cluster_cidr is defined %}
-  --cluster-cidr={{ cluster_cidr }}
+  {% if kube_pod_cidr is defined %}
+  --cluster-cidr={{ kube_pod_cidr }}
   {% endif %}
-  {% if service_cidr is defined %}
-  --service-cidr={{ service_cidr }}
+  {% if kube_svc_cidr is defined %}
+  --service-cidr={{ kube_svc_cidr }}
   {% endif %}  
   --disable servicelb
   --disable traefik
