@@ -71,6 +71,12 @@ extra_server_args: >-
   {% if apiserver_loadbalancer_domain_name is defined %}
   --tls-san {{ apiserver_loadbalancer_domain_name }}
   {% endif %}
+  {% if cluster_cidr is defined %}
+  --cluster-cidr={{ cluster_cidr }}
+  {% endif %}
+  {% if service_cidr is defined %}
+  --service-cidr={{ service_cidr }}
+  {% endif %}  
   --disable servicelb
   --disable traefik
   --cluster-domain {{ cluster_domain }}
