@@ -5,15 +5,15 @@
   roles:
     - role: reset
       become: true
-    - role: raspberrypi
-      become: true
-      vars: {state: absent}
-  post_tasks:
-    - name: Reboot and wait for node to come back up
-      become: true
-      reboot:
-        reboot_command: "{{ custom_reboot_command | default(omit) }}"
-        reboot_timeout: 3600
+  #   - role: raspberrypi
+  #     become: true
+  #     vars: {state: absent}
+  # post_tasks:
+  #   - name: Reboot and wait for node to come back up
+  #     become: true
+  #     reboot:
+  #       reboot_command: "{{ custom_reboot_command | default(omit) }}"
+  #       reboot_timeout: 3600
 
 - name: Revert changes to Proxmox cluster
   hosts: proxmox
