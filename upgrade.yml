@@ -10,6 +10,7 @@
       - v1.31.13+k3s1
       - v1.32.9+k3s1
       - v1.33.5+k3s1
+      - v1.33.6+k3s1
   tasks:
       - name: Set desired K3s version fact
         set_fact:
